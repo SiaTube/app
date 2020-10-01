@@ -1,7 +1,7 @@
 <template><div>
     <p>You need to be logged in to upload a video</p>
-    <input type = 'file' accept = 'video/*' />
-    <button @click = 'uploadVideo'>Upload Video</button>
+    <input type = 'file' accept = 'video/*' @change = 'onFileChange' />
+    <button @click = 'uploadVideo' :disabled = '!video'>Upload Video</button>
 </div></template>
 
 <script>
@@ -11,10 +11,16 @@ import { SkynetClient } from 'skynet-js';
 export default {
     data() {
         return {
-            video: ''
+            video: null
         }
     },
     methods: {
+        onFileChange(e) {
+            let files = e.target.files || e.dataTransfer.files;
+            this.video = files[0];
+            console.log('FILES', files);
+            if(!files.length) return;
+        },
         uploadVideo: function() {
             const video = this.video;
             const client = new SkynetClient('https://siasky.net');
